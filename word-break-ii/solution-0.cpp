@@ -1,46 +1,46 @@
 class Solution {
 private: 
   vector<string> ans;
-  void dfs(string& s, unordered_set<string>& wordDict, int start, int n, string result) {
-    if (start == n) {
-      ans.push_back(result);
-      return;
+  vector<vector<int> > startingIndices;
+  void buildStartingIndices(string s, unordered_set<string>& wordDict) {
+    int n = s.length();
+    for (int i = 0; i < n; ++i) {
+      startingIndices.push_back(vector<int>());
     }
-    for (int end = start; end < n; ++end) {
-      string sub = s.substr(start, end - start + 1);
-      if (wordDict.count(sub)) {
-        string new_result = "";
-        if (result.length() == 0) {
-          new_result = sub;
-        } else {
-          new_result = result + " " + sub;
-        }
-        dfs(s, wordDict, end + 1, n, new_result);
-      }
-    }
-  }
-  bool isBreakable(string s, unordered_set<string>& wordDict) {
-    s = " " + s;
-    int n = s.length() + 1;
-    bool ok[n];
-    memset(ok, false, sizeof ok);
-    ok[0] = true;
+    startingIndices[0].push_back(-1);
     for (int i = 1; i < n; ++i) {
       for (int j = 1; j <= i; ++j) {
-        if (ok[j - 1] && wordDict.count(s.substr(j, i - j + 1))) {
-          ok[i] = true;
-          break;
+        if (startingIndices[j - 1].size() != 0 && wordDict.count(s.substr(j, i - j + 1))) {
+          startingIndices[i].push_back(j);
         }
       }
     }
-    return ok[n - 1];
+    return;
   }
+
+  void dfs(string& s, int index, string suffix) {
+    if (index == 0) {
+      ans.push_back(suffix);
+      return;
+    }
+    for (int i = 0; i < startingIndices[index].size(); ++i) {
+      int start = startingIndices[index][i];
+      string sub = s.substr(start, index - start + 1);
+      string new_suffix;
+      if (suffix.length() == 0) {
+        new_suffix = sub;
+      } else {
+        new_suffix = sub + " " + suffix;
+      }
+      dfs(s, start - 1, new_suffix);
+    }
+  }
+
 public:
   vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
-    if (!isBreakable(s, wordDict)) {
-      return ans;
-    }
-    dfs(s, wordDict, 0, s.length(), "");
+    s = " " + s;
+    buildStartingIndices(s, wordDict);
+    dfs(s, s.length() - 1, "");
     return ans;
   }
 };
