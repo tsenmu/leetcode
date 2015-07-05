@@ -11,7 +11,7 @@ class Solution {
 private: 
   vector<TreeNode*> constructTree(int l, int r) {
     vector<TreeNode*> ans;
-    if (l >= r) {
+    if (l > r) {
       ans.push_back(NULL);
       return ans;
     }
