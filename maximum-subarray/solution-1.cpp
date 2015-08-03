@@ -14,7 +14,7 @@ public:
       sum += nums[i];
       leftPartMax = max(sum, leftPartMax);
     }
-    int sum = nums[m + 1];
+    sum = nums[m + 1];
     int rightPartMax = sum;
     for (int i = m + 2; i <= r; ++i) {
       sum += nums[i];
