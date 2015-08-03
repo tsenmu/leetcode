@@ -28,6 +28,6 @@ public:
     return result;
   }
   bool isValidBST(TreeNode* root) {
-    dfs(, INT_MAX, root);
+    dfs(LONG_LONG_MIN, LONG_LONG_MAX, root);
   }
 };
