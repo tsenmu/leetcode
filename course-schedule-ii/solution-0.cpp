@@ -1,6 +1,7 @@
 class Solution {
 public:
-  bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+  bool findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+    vector<int> ans;
     int in[numCourses];
     vector<int> out[numCourses];
     for (int i = 0; i < numCourses; ++i) {
@@ -24,6 +25,7 @@ public:
     while (!Q.empty()) {
       int current = Q.front();
       Q.pop();
+      ans.push_back(current);
       for (int i = 0; i < out[current].size(); ++i) {
         int to = out[current][i];
         in[to]--;
@@ -34,9 +36,9 @@ public:
     }
     for (int i = 0; i < numCourses; ++i) {
       if (in[i] != 0) {
-        return false;
+        return vector<int>();
       }
     }
-    return true;
+    return ans;
   }
 };
