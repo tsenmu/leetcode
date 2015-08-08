@@ -31,7 +31,7 @@ public:
         if (doReverse) {
           reverse(ans[i].begin(), ans[i].end());
         }
-        doReverse = !reverse;
+        doReverse = !doReverse;
       }
       return ans;       
     }
