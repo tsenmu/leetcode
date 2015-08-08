@@ -10,9 +10,6 @@ class Solution {
 public:
   void connect(UndirectedGraphNode* a, UndirectedGraphNode* b) {
     a->neighbors.push_back(b);
-    // if (a != b) {
-      // b->neighbors.push_back(a);
-    // }
   }
 
   UndirectedGraphNode* initNodeFrom(UndirectedGraphNode* node, 
