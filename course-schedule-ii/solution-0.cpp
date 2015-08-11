@@ -1,6 +1,6 @@
 class Solution {
 public:
-  bool findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+  vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
     vector<int> ans;
     int in[numCourses];
     vector<int> out[numCourses];

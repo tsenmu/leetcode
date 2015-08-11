@@ -8,8 +8,8 @@ public:
     }
 
     for (int i = 0; i < prerequisites.size(); ++i) {
-      int from = prerequisites[i].first;
-      int to = prerequisites[i].second;
+      int to = prerequisites[i].first;
+      int from = prerequisites[i].second;
       out[from].push_back(to);
       in[to]++;
     }
