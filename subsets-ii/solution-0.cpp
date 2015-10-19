@@ -1,19 +1,9 @@
 class Solution {
 public:
-    bool cmp(const vector<int>& a, const vector<int>& b) {
-      if (a.size() != b.size()) {
-        return false;
-      }
-      for (int i = 0; i < a.size(); ++i) {
-        if (a[i] != b[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
       sort(nums.begin(), nums.end());
-      vector<vector<int>> results;
+      
+      set<vector<int>> S;
       for (int i = 0; i < (1 << nums.size()); ++i) {
         vector<int> result;
         for (int j = 0; j < nums.size(); ++j) {
@@ -21,10 +11,12 @@ public:
             result.push_back(nums[j]);
           }
         }
-        results.push_back(result);
+        S.insert(result);
       }
-      std::vector<vector<int>>::iterator it = unique(results.begin(), results.end(), cmp);
-      results.resize( std::distance(results.begin(),it));
+      vector<vector<int>> results;
+      for ( set<vector<int>>::iterator it = S.begin(); it != S.end(); ++it) {
+         results.push_back(*it);
+      }
       return results;
     }
 };
