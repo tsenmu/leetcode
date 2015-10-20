@@ -12,17 +12,18 @@ public:
     if (head == NULL) {
       return NULL;
     }
-    stack<ListNode*> s;       
+    stack<ListNode*> s;
     ListNode* current = head;
-    while(current) {
+    while (current) {
       s.push(current);
       current = current->next;
     }
     head = s.top();
     s.pop();
-    last = head;
+    ListNode* last = head;
     while(!s.empty()) {
       current = s.top();   
+      s.pop();
       last->next = current;
       last = current;
     }
