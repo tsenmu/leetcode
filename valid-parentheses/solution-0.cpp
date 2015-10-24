@@ -9,6 +9,8 @@ public:
           char top = S.top();
           if (top == '(' && ch == ')' || top == '{' && ch == '}' || top == '[' && ch == ']') {
             S.pop();
+          } else {
+              return false;
           }
         } else {
           return false;
