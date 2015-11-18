@@ -10,42 +10,38 @@ class Solution {
 public:
   void connect(TreeLinkNode *root) {
     TreeLinkNode* current = root;
-    TreeLinkNode* firstChild = NULL;
-    TreeLinkNode* previousValidChild = NULL;
+    TreeLinkNode* firstChild = NULL; // first child in the layer
+    TreeLinkNode* previousChild = NULL; // previous child in the layer
     while (current) {
-      if (current->left && current->right) {
-        current->left->next = current->right;
-        if (previousValidChild) {
-          previousValidChild->next = current->left;
+      if (current->left) {
+        if (previousChild) {
+          previousChild->next = current->left;
         }
-        previousValidChild = current->right;
+        previousChild = current->left;
         if (!firstChild) {
           firstChild = current->left;
         }
-      } else if (current->left) {
-        if (previousValidChild) {
-          previousValidChild->next = current->left;
+      } 
+
+      if (current->right) {
+        if (previousChild) {
+          previousChild->next = current->right;
         }
-        previousValidChild = current->left;
-        if (!firstChild) {
-          firstChild = current->left;
-        }
-      } else if (current->right) {
-        if (previousValidChild) {
-          previousValidChild->next = current->right;
-        }
-        previousValidChild = current->right;
+        previousChild = current->right;
         if (!firstChild) {
           firstChild = current->right;
         }
       }
       if (current->next) {
+        // go to next
         current = current->next; 
       } else if (firstChild) {
+        // go to next layer
         current = firstChild;
         firstChild = NULL;
-        previousValidChild = NULL;
+        previousChild = NULL;
       } else {
+        // finish
         current = NULL;
       }
     }
