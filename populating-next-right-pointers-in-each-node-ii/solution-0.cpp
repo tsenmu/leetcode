@@ -13,25 +13,20 @@ public:
     TreeLinkNode* firstChild = NULL; // first child in the layer
     TreeLinkNode* previousChild = NULL; // previous child in the layer
     while (current) {
-      if (current->left) {
-        if (previousChild) {
-          previousChild->next = current->left;
-        }
-        previousChild = current->left;
-        if (!firstChild) {
-          firstChild = current->left;
-        }
-      } 
-
-      if (current->right) {
-        if (previousChild) {
-          previousChild->next = current->right;
-        }
-        previousChild = current->right;
-        if (!firstChild) {
-          firstChild = current->right;
+      TreeLinkNode* children[] = {current->left, current->right};
+      for (int i = 0; i < 2; ++i) {
+        TreeLinkNode* child = children[i]; 
+        if (child) {
+          if (previousChild) {
+            previousChild->next = child;
+          }
+          previousChild = child;
+          if (!firstChild) {
+            firstChild = child;
+          }
         }
       }
+      
       if (current->next) {
         // go to next
         current = current->next; 
