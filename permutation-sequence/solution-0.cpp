@@ -9,27 +9,18 @@ public:
 
     string ans;
     bool visited[n + 1];
-    memset(visited, false, sizeof visited);
     int m = n - 1;
+    int start = 0;
     k -= 1;
     while (m) {
       int round = k / factors[m];
       k -=  round * factors[m];
-      for (int i = 1; i <= n; ++i) {
-        if (!visited[i]) {
-          if (round == 0) {
-            visited[i] = true;
-            ans.push_back('0' + i);
-          }
-          round--;
-        }
-      }
+      ans.push_back(start + round + '0');
+      start++;
       m--;
     }
-    for (int i = 1; i <= n; ++i) {
-      if (!visited[i]) {
-        ans.push_back('0' + i);
-      }
+    for (int i = start; i <= n; ++i) {
+      ans.push_back('0' + i);
     }
     return ans;
   }
