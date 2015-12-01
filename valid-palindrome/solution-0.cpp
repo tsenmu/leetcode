@@ -4,8 +4,6 @@ public:
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9');
   }
 
-
-
   bool isPalindrome(string s) {
     for (int i = 0; i < s.length(); ++i) {
       s[i] = tolower(s[i]);
