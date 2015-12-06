@@ -24,9 +24,6 @@ public:
         sort(candidates.begin(), candidates.end());
         vector<int> result;
         dfs(result, 0, -1, candidates, target);
-        sort(results.begin(), results.end());
-        std::vector<int>::iterator it = unique(results.begin(), results.end())
-        results.resize( std::distance(results.begin(),it) );
         return results;
     }
 };
