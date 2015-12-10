@@ -37,6 +37,7 @@ public:
 
     int search(vector<int>& nums, int target) {
     	int min_index = find_min_index(nums);
+    	printf("%d\n", min_index);
     	int ans = -1;
     	if (min_index == 0) {
     		ans = range_binary_search(nums, 0, nums.size() - 1, target);
@@ -44,7 +45,7 @@ public:
     		if (nums[0] <= target && target <= nums[min_index - 1]) {
     			ans = range_binary_search(nums, 0, min_index - 1, target);
     		} else if (nums[min_index] <= target && target <= nums[nums.size() - 1]) {
-    			ans = range_binary_search(nums, 0, min_index, nums.size() - 1);
+    			ans = range_binary_search(nums, min_index, nums.size() - 1, target);
     		} else {
     			ans = -1;
     		}
