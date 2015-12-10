@@ -1,55 +1,54 @@
 class Solution {
 public:
-	void getSearchRange(int A[], int n, int target, int& begin, int& end) {
-		int l, r, m;
-		l = 0;
-		r = n - 1;
-		while(l <= r) {
-			m = (l + r) >> 1;
-			if (m + 1 <= r) {
-			// if m has a valid neighbour on its right
-				if (A[m] > A[m+1]) {
-					break;	
-				} else if (A[l] < A[m]) {
-					l = m + 1;
-				} else if (A[r] > A[m]) {
-					r = m - 1;
-				}
+	int find_min_index(const vector<int>& nums) {
+		int l = 0;
+		int r = nums.size() - 1;
+		while (l < r) {
+			if (nums[l] < nums[r]) {
+				return l;
+			}
+			int m = l + ((r - l) >> 1);
+			if (nums[m] >= nums[l]) {
+				l = m + 1;
 			} else {
-			// if m does not have a valid neighbour on its right,
-			// r == m, l == m or l == m - 1 ,
-			// we only have to assert l
-				if (A[l] > A[l+1]) {
-					m = l;
-				}
+				r = m;
+			}
+		}
+		return r;
+	}
+
+	int range_binary_search(const vector<int>& nums, int left, int right, int target) {
+		int l = left;
+		int r = right;
+		int ans = -1;
+		while (l <= r) {
+			int m = l + ((r - l) >> 1);
+			if (nums[m] > target) {
+				r = m - 1;
+			} else if (nums[m] < target) {
+				l = m + 1;
+			} else {
+				ans = m;
 				break;
 			}
 		}
-		if (target <= A[n-1]) {
-			begin = min(m + 1, n - 1);
-			end = n - 1;
-		} else {
-			begin = 0;
-			end = m;
-		}
+		return ans;
 	}
-	int binarySearch(int A[], int l, int r, int target) {
-		int m;
-		while(l <= r) {
-			m = (l + r) >> 1;
-			if (A[m] == target) {
-				return m;
-			} else if (A[m] > target) {
-				r = m - 1;
-			} else {
-				l = m + 1;
-			}
-		}
-		return -1;
-	}
-	int search(int A[], int n, int target) {
-		int begin, end;
-		getSearchRange(A, n, target, begin, end);
-		return binarySearch(A, begin, end, target);
-	}
+
+    int search(vector<int>& nums, int target) {
+    	int min_index = find_min_index(nums);
+    	int ans = -1;
+    	if (min_index == 0) {
+    		ans = range_binary_search(nums, 0, nums.size() - 1, target);
+    	} else {
+    		if (nums[0] <= target && target <= nums[min_index - 1]) {
+    			ans = range_binary_search(nums, 0, min_index - 1, target);
+    		} else if (nums[min_index] <= target && target <= nums[nums.size() - 1]) {
+    			ans = range_binary_search(nums, 0, min_index, nums.size() - 1);
+    		} else {
+    			ans = -1;
+    		}
+    	}
+    	return ans;
+    }
 };
