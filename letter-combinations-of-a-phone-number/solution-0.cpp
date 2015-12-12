@@ -3,7 +3,9 @@ public:
 
     void dfs(vector<string>& results, int index, string& result, string& digits, vector<string>& records) {
         if (index == digits.length()) {
-            results.push_back(result);
+            if (!result.empty()) {
+                results.push_back(result);
+            }
             return;
         }
 
@@ -31,8 +33,10 @@ public:
         records.push_back("pqrs");
         records.push_back("tuv");
         records.push_back("wxyz");
+        
         vector<string> results;
-        vector<string> result;
+        
+        string result;
         dfs(results, 0, result, digits, records);
         return results;
     }
