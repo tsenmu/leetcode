@@ -1,18 +1,25 @@
 class Solution {
 public:
-  bool isMatch(string s, string p) {
-    int dp[s.length()][p.length()];
+    bool isMatch(string s, string p) {
+        const int n = s.length();
+        const int m = p.length();
+        vector<vector<bool>> dp(n + 1, vector<int>(m + 1, false));
+        
+        dp[0][0] = true;
 
-    for (int i = 0; i < s.length(); ++i) {
-      for (int j = 0; j < p.length(); ++j) {
-        if (p[j] == '*') {
-          
-        } else if (p[j] == '?') {
+        for (int i = 0; i < n; ++i) {
+            char ch = s[i];
+            for (int j = 0; j < m; ++j) {
+                char pattern = p[j];
+                dp[i + 1][j + 1] = dp[i][j];
 
-        } else {
+                for (int k = 0; k < j; ++k) {
+                    dp[i + 1][j + 1] =  
+                }
 
+            }
         }
-      }
+
+        return dp[n][m];
     }
-  }
 };
