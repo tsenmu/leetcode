@@ -1,6 +1,7 @@
 class Solution {
 public:
-  int trap(int A[], int n) {
+  int trap(vector<int>& A) {
+    int n = A.size();
     int l = 0;
     int r = n - 1;
     int lm = 0;
