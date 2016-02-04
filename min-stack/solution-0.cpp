@@ -1,21 +1,30 @@
 class MinStack {
+protected:
+    stack<pair<int,int>> m_s;
 public:
-    stack<pair<int, int>> S;
-    int minimum = INT_MAX;
-    int minimum_pos = -1;
     void push(int x) {
-        S.push(make_pair(x, minimum_pos))
+        if (m_s.empty()) {
+            m_s.push(make_pair(x, x));
+        } else {
+            m_s.push(make_pair(x, min(getMin(), x)));
+        }
     }
 
     void pop() {
-        
+        if (!m_s.empty()) {
+            m_s.pop();
+        }
     }
 
     int top() {
-        return S.top().first;
+        return m_s.top().first;
     }
 
     int getMin() {
-        return minimum; 
+        if (m_s.empty()) {
+            return INT_MIN;
+        } else {
+            return m_s.top().second;
+        }
     }
 };
