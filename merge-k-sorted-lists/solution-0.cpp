@@ -6,15 +6,39 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+ 
 class Solution {
 protected:
-    bool cmp(const pair<int, ListNode*>>& a, const pair<int, ListNode*>>& b) {
-        return a.first < b.first;  
+    static bool cmp(ListNode* a, ListNode* b) {
+        return a->val > b->val;  
     }
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>, cmp> Q;
+        ListNode* dummy = new ListNode(0);
+        ListNode* node = dummy;
 
-        return NULL;
+        priority_queue<ListNode, vector<ListNode*>, decltype(&cmp)> heap(&cmp);
+
+        for (int i = 0; i < lists.size(); ++i) {
+            if (lists[i]) {
+                heap.push(lists[i]);
+            }
+        }
+
+        while (!heap.empty()) {
+            ListNode* top = heap.top();
+            heap.pop();
+            node->next = top;
+            node = node->next;
+            if (top->next) {
+                heap.push(top->next);
+            }
+            node->next = NULL;
+        }
+
+        ListNode* ans = dummy->next;
+        delete dummy;
+
+        return ans;
     }
 };
