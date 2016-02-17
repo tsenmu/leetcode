@@ -1,50 +1,55 @@
 class Solution {
-public:
-  void expand(int** grid, 
-    bool** visited, const int row, const int col, int x, int y) {
-    queue<pair<int, int>> Q;
-    Q.push(make_pair(x, y));
-    while (!Q.empty()) {
-      x = Q.front().first; 
-      y = Q.front().second;
-
-      if (grid[x][y] == 1 && !visited[x][y]) {
-        Q.push(make_pair(x - 1, y));
-        Q.push(make_pair(x + 1, y));
-        Q.push(make_pair(x, y + 1));
-        Q.push(make_pair(x, y - 1));
-      }
-      visited[x][y] = true;
-
-      Q.pop();
+protected:
+    bool is_valid(int br, int bc, int r, int c) {
+        return br >= 0 && bc >= 0 && br < r && bc < c;
     }
-  }
-  int numIslands(vector<vector<char>>& grid) {
-    if (grid.size() == 0) {
-      return 0;
-    }      
-    int row = grid.size();
-    int col = grid[0].size();
-    int augmentedGrid[row + 2][col + 2];
-    memset(augmentedGrid, 0, sizeof augmentedGrid);
-    for (int i = 0; i < row; ++i) {
-      for (int j = 0; j < col; ++j) {
-        augmentedGrid[i + 1][j + 1] = grid[i][j] == '1' ? 1 : 0;
-      }
-    }
-    row = row + 2;
-    col = col + 2;
-    bool visited[row][col];
-    memset(visited, false, sizeof visited);
-    int ans = 0;
-    for (int i = 0; i < row; ++i) {
-      for (int j = 0; j < col; ++j) {
-        if (!visited[i][j] && augmentedGrid[i][j] == 1) {
-          ++ans;
-          expand((int**)augmentedGrid, (bool**)visited, row, col, i, j);
+    void expand(int br, int bc, vector<vector<int>>& colours) {
+        int row = colours.size();
+        int col = colours[0].size();
+        if (!is_valid(br, bc, row, col)) {
+            return;
         }
-      }
+
+        if (colours[br][bc] != 1) {
+            return;
+        }
+        
+        colours[br][bc] = 2;
+
+        int dr[] = {0, 0, -1, 1};
+        int dc[] = {-1, 1, 0, 0};
+        for (int i = 0; i < 4; ++i) {
+            int nr = br + dr[i];
+            int nc = bc + dc[i];
+            expand(nr, nc, colours);
+        }
     }
-    return ans;
-  }
-};
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.size() == 0 || grid[0].size() == 0) {
+            return 0; 
+        }
+        const int row = grid.size();
+        const int col = grid[0].size();
+        vector<vector<int>> colours(row, vector<int>(col, 0));
+
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                if (grid[i][j] == '1') {
+                    colours[i][j] = 1;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                if (colours[i][j] == 1) {
+                    expand(i, j, colours);
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+}; 
