@@ -9,30 +9,28 @@
  */
 class Solution {
 public:
-  vector<string> result;
-
-  void dfs(string res, TreeNode* root) {
-    if (root == NULL) {
-      return;
-    } 
-    if (!res.empty()) {
-      res += "->";
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> resultCollection; 
+        dfs(root, "", resultCollection);
+        return resultCollection;
     }
-    res += to_string(root->val);
 
-    if (root->left == NULL && root->right == NULL) {
-      result.push_back(res);
-    }
-    dfs(res, root->left);
-    dfs(res, root->right);
-  }
+    void dfs(TreeNode* node, string result, vector<string>& resultCollection) {
+      if (node == NULL) {
+        return;
+      }
 
-  vector<string> binaryTreePaths(TreeNode* root) {
-    if (root == NULL) {
-      return result;
+      bool isLeaf = node->left == NULL && node->right == NULL;
+
+      ostringstream oss;
+      oss << node->val << (isLeaf ? "" : "->");
+      result += oss.str();
+
+      if (isLeaf) {
+        resultCollection.push_back(result);
+      } else {
+        dfs(node->left, result, resultCollection);
+        dfs(node->right, result, resultCollection);
+      }
     }
-    string str;
-    dfs(str, root);
-    return result;
-  }
 };
