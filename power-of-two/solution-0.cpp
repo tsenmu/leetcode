@@ -1,15 +1,20 @@
 class Solution {
 public:
-  bool isPowerOfTwo(int n) {
-    if (n & (1 << 31)) {
-        return false;
+    bool isPowerOfTwo(int n) {
+        if (n <= 0) {
+          return false;
+        }
+
+        return countOneInIntegerRepresentation(n) == 1;
     }
-    int num = 0;
-    for (int i = 0; i < 31; ++i) {
-      if (n & (1 << i)) {
-        num++;
+
+    int countOneInIntegerRepresentation(int n) {
+      int ans = 0;
+      for (int i = 0; i < 32; ++i)  {
+        if (n & (1 << i)) {
+          ++ans;
+        }
       }
+      return ans;
     }
-    return num == 1;
-  }
 };
