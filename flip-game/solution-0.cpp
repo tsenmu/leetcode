@@ -1,16 +1,15 @@
 class Solution {
 public:
     vector<string> generatePossibleNextMoves(string s) {
-        vector<string> ans;       
-        const int n = s.length();
-        for (int i = 1; i < n; ++i) {
-            string next = s;
-            if (s[i] == '+' && s[i - 1] == '+') {
-                next[i] = '-';
-                next[i - 1] = '-';
-                ans.push_back(next);
+        vector<string> result;
+        int len = (int) s.length();
+        for (int i = 0; i < len - 1; ++i) {
+            if (s[i] == '+' && s[i + 1] == '+') {
+                result.push_back(s);
+                result[result.size() - 1][i] = '-';
+                result[result.size() - 1][i + 1] = '-';
             }
         }
-        return ans;
+        return result;
     }
 };
