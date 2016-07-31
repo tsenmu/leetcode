@@ -10,25 +10,15 @@
 class Solution {
 public:
     int closestValue(TreeNode* root, double target) {
-
-        TreeNode* left = root->left;
-        TreeNode* right = root->right;
-
-        int closest = root->val;
-        if (target < root->val && root->left) {
-            int leftClosest = closestValue(root->left, target);
-            if (fabs(target - leftClosest) < fabs(target - closest)) {
-                closest = leftClosest;
-            }
+        double diff = target - root->val;
+        
+        if (diff < 0 && root->left != NULL) {
+            int leftVal = closestValue(root->left, target);
+            return fabs(diff) < fabs(leftVal - target) ? root->val : leftVal;
+        } else if (diff > 0 && root->right != NULL) {
+            int rightVal = closestValue(root->right, target);
+            return fabs(diff) < fabs(rightVal - target) ? root->val : rightVal;
         }
-
-        if (target > root->val && root->right) {
-            int rightClosest = closestValue(root->right, target);
-            if (fabs(target - rightClosest) < fabs(target - closest)) {
-                closest = rightClosest;
-            }
-        }
-
-        return closest;
+        return root->val;
     }
 };
