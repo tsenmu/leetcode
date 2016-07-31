@@ -1,6 +1,7 @@
 class ValidWordAbbr {
 protected:
-    unordered_map<string> m_set;
+    unordered_map<string, int> m_map;
+    unordered_set<string> m_set;
     string calculateAbbreviation(const string& word) {
         if (word.length() <= 2) {
             return word;
@@ -13,13 +14,18 @@ protected:
 public:
     ValidWordAbbr(vector<string> &dictionary) {
         for (int i = 0; i < dictionary.size(); ++i) {
-           const stirng& word = dictionary[i];
-            m_set.insert(calculateAbbreviation(word));
+           const string& word = dictionary[i];
+           if (m_set.count(word) == 0) {
+               m_map[calculateAbbreviation(word)]++;
+               m_set.insert(word);
+           } 
         }
     }
 
     bool isUnique(string word) {
-        return m_set.count(calculateAbbreviation(word)) == 0; 
+        int countMap = m_map[calculateAbbreviation(word)];
+        int countSet = m_set.count(word);
+        return countMap == 0 || (countMap == 1 && countSet == 1); 
     }
 };
 
