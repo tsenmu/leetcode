@@ -1,32 +1,26 @@
 class Solution {
 public:
     bool canPermutePalindrome(string s) {
-        const int n = s.length();
-
-        const int max_char = 255;
-
-        vector<int> count(max_char, 0);
-
-        for (int i = 0; i < n; ++i) {
-            count[(int)s[i]]++;
+        unordered_map<char, int> count;
+        for (int i = 0; i < s.length(); ++i) {
+            count[s[i]]++;
+        }
+        int oddCount = 0;
+        for (auto it = count.begin(); it != count.end(); ++it) {
+            if (it->second & 1) {
+                oddCount++;
+            } 
         }
 
-        int oddCount = 0;
-        int evenCount = 0;
-        for (int i = 0; i < max_char; ++i) {
-            if (count[i]) {
-                if (count[i] & 1) {
-                    oddCount++;
-                } else {
-                    evenCount++;
-                }
+        if (s.length() & 1) {
+            if (oddCount == 0 || oddCount == 1) {
+                return true;
+            }
+        } else {
+            if (oddCount == 0) {
+                return true;
             }
         }
-
-        if (n & 1) {
-            return oddCount == 1;
-        } else {
-            return oddCount == 0;
-        }
+        return false;
     }
 };
