@@ -1,41 +1,35 @@
 class Solution {
-protected:
-    string calculateEncodedString(const string& str) {
-        const int n = str.length();
-        string ans;
-        for (int i = 1; i < n; ++i) {
-            int last = (int)str[i - 1];
-            int current = (int)str[i];
-            int diff = 0;
-            if (current >= last) {
-                diff = current - last;
-            } else {
-                diff = 26 - (last - current);
-            }
-            ans += (char)('a' + diff);
+private:
+    string getOriginalString(const string& word) {
+        if (word.empty()) {
+            return "";
         }
-        return ans;
+        int diff = word[0] - 'a';
+        string result = word;
+        for (int i = 0; i < result.length(); ++i) {
+            result[i] = shift(result[i], 26 - diff);
+        }
+        return result;
+    }
+
+    char shift(char ch, int diff) {
+        if (diff > 0) {
+            return 'a' + (((int)(ch - 'a') + diff) % 26);
+        }
+
+        return shift(ch, 26 - (diff % 26));
     }
 public:
     vector<vector<string>> groupStrings(vector<string>& strings) {
-        unordered_map<string, vector<int>> M;       
-        const int n = strings.size();
-        for (int i = 0; i < n; ++i) {
-            string encoded = calculateEncodedString(strings[i]);
-            M[encoded].push_back(i);
+        unordered_map<string, vector<string>> dict;
+        for (int i = 0; i < strings.size(); ++i) {
+            const string& str = strings[i];
+            dict[getOriginalString(str)].push_back(str);
         }
-
-        vector<vector<string>> ans;
-
-        for (auto it = M.begin(); it != M.end(); ++it) {
-            vector<string> seq;
-            const vector<int>& indices = it->second;
-            for (int i = 0; i < indices.size(); ++i) {
-                seq.push_back(strings[indices[i]]);
-            }
-            sort(seq.begin(), seq.end());
-            ans.push_back(seq);
+        vector<vector<string>> result;
+        for (auto it = dict.begin(); it != dict.end(); ++it) {
+            result.push_back(it->second);
         }
-        return ans;
-   }
+        return result;
+    }
 };
