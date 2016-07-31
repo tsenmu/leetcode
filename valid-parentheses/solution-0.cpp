@@ -1,24 +1,37 @@
 class Solution {
 public:
-  bool isValid(string s) {
-    stack<char> S;      
-    for (int i = 0; i < s.size(); ++i) {
-      char ch = s[i];
-      if (ch == ')' || ch == '}' || ch == ']') {
-        if (!S.empty()) {
-          char top = S.top();
-          if (top == '(' && ch == ')' || top == '{' && ch == '}' || top == '[' && ch == ']') {
-            S.pop();
-          } else {
-              return false;
-          }
-        } else {
-          return false;
+    bool isValid(string s) {
+        stack<char> symbolStack;
+
+        for (int i = 0; i < s.length(); ++i) {
+            char symbol = s[i];
+            char topSymbol = ' ';
+            if (!symbolStack.empty()) {
+              topSymbol = symbolStack.top();
+            }
+            switch (symbol) {
+              case '(':
+              case '{':
+              case '[':
+                symbolStack.push(symbol);
+                break;
+              case ')':
+              case '}':
+              case ']':
+                if (isMatch(topSymbol, symbol)) {
+                  symbolStack.pop();
+                } else {
+                  return false;
+                }
+                break;
+            }
         }
-      } else {
-        S.push(ch);
-      }
+
+        return symbolStack.empty();
     }
-    return S.empty();
-  }
+
+    bool isMatch(char left, char right) {
+      return left == '(' && right == ')' || left == '[' && right == ']' 
+        || left == '{' && right == '}';
+    }
 };
