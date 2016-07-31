@@ -1,41 +1,31 @@
 class Solution {
-protected:
-    unordered_map<int, int> m_map;
-    void createDigitMap() {
-        m_map[0] = 0; 
-        m_map[1] = 1;
-        m_map[2] = -1;
-        m_map[3] = -1;
-        m_map[4] = -1;
-        m_map[5] = -1;
-        m_map[6] = 9;
-        m_map[7] = -1;
-        m_map[8] = 8;
-        m_map[9] = 6;
+private:
+    unordered_map<int, int> m_reversedDigit;
+
+    void initializeReversedDigits() {
+        m_reversedDigit[0] = 0;
+        m_reversedDigit[1] = 1;
+        m_reversedDigit[2] = -1;
+        m_reversedDigit[3] = -1;
+        m_reversedDigit[4] = -1;
+        m_reversedDigit[5] = -1;
+        m_reversedDigit[6] = 9;
+        m_reversedDigit[7] = -1;
+        m_reversedDigit[8] = 8;
+        m_reversedDigit[9] = 6;
     }
-    bool calculateRotated(const string& str, string& ans) {
-        const int n = str.length();
-        ans.clear();
-        for (int i = 0; i < n; ++i) {
-            int digit = (int)(str[i] - '0');
-            if (m_map[digit] == -1) {
-                return false;
-            }
-            ans.push_back((char)(m_map[digit] + '0'));
-        }
-        reverse(ans.begin(), ans.end());
-        return true;
-    }  
 public:
+    Solution() {
+        initializeReversedDigits();
+    }
+
     bool isStrobogrammatic(string num) {
-        if (m_map.size() == 0) {
-            createDigitMap();
+        const int len = (int) num.length();
+        string reversedNum = num;
+        for (int i = 0; i < len; ++i) {
+            int reversedDigit = m_reversedDigit[num[i] - '0'];
+            reversedNum[len - i - 1] = reversedDigit + '0';
         }
-        string stro;
-        if (!calculateRotated(num, stro)) {
-            return false; 
-        }
-        cout << stro << endl;
-        return num == stro;
+        return reversedNum == num;
     }
 };
