@@ -1,55 +1,75 @@
 class Solution {
 protected:
-    bool is_valid(int br, int bc, int r, int c) {
-        return br >= 0 && bc >= 0 && br < r && bc < c;
-    }
-    void expand(int br, int bc, vector<vector<int>>& colours) {
-        int row = colours.size();
-        int col = colours[0].size();
-        if (!is_valid(br, bc, row, col)) {
-            return;
-        }
+    bool labelIsland(int r, int c, 
+        vector<vector<int>>& labels, int nextNewLabel) {
 
-        if (colours[br][bc] != 1) {
-            return;
+        const int row = labels.size();
+        const int col = labels[0].size();
+
+        if (!isValidCoordinate(r, c, row, col)) {
+            return false;
         }
         
-        colours[br][bc] = 2;
-
-        int dr[] = {0, 0, -1, 1};
-        int dc[] = {-1, 1, 0, 0};
-        for (int i = 0; i < 4; ++i) {
-            int nr = br + dr[i];
-            int nc = bc + dc[i];
-            expand(nr, nc, colours);
+        if (labels[r][c] == 0 || labels[r][c] > 1) {
+            return false;
         }
+        
+        const int dr[4] = {-1, 1, 0, 0};
+        const int dc[4] = {0, 0, -1, 1};
+        
+        bool visited = false;
+
+        if (labels[r][c] == 1) {
+            labels[r][c] = nextNewLabel;
+
+            for (int i = 0; i < 4; ++i) {
+                labelIsland(r + dr[i], c + dc[i], labels, nextNewLabel);
+            }
+
+            visited = true;
+        } else {
+            labels[r][c] = -1;
+        }
+        
+
+        return visited;
+    }
+
+    bool isValidCoordinate(int r, int c, int row, int col) {
+        return r >= 0 && c >= 0 && r < row && c < col; 
     }
 public:
     int numIslands(vector<vector<char>>& grid) {
-        if (grid.size() == 0 || grid[0].size() == 0) {
-            return 0; 
+        if (grid.size() == 0) {
+            return 0;
         }
+
         const int row = grid.size();
         const int col = grid[0].size();
-        vector<vector<int>> colours(row, vector<int>(col, 0));
 
+        vector<vector<int>> labels(row, vector<int>(col, 0));
+
+        // initialize the label with grid info.
         for (int i = 0; i < row; ++i) {
             for (int j = 0; j < col; ++j) {
                 if (grid[i][j] == '1') {
-                    colours[i][j] = 1;
+                    labels[i][j] = 1;
+                }
+            }
+        }
+        
+        
+
+        int nextNewLabel = 2;
+
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                if (labelIsland(i, j, labels, nextNewLabel)) {
+                    nextNewLabel++; 
                 }
             }
         }
 
-        int ans = 0;
-        for (int i = 0; i < row; ++i) {
-            for (int j = 0; j < col; ++j) {
-                if (colours[i][j] == 1) {
-                    expand(i, j, colours);
-                    ans++;
-                }
-            }
-        }
-        return ans;
+        return nextNewLabel - 2;
     }
-}; 
+};
