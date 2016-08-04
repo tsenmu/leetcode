@@ -1,27 +1,39 @@
 class Solution {
-public:
-    std::string getRange(int start, int len) {
-      std::ostringstream oss;
-      if (len > 1) {
-        oss << start << "->" << start + len - 1;
-      } else {
-        oss << start;
-      }
-      return oss.str();
+
+protected:
+    string yieldRange(int begin, int end) {
+      if (begin == end) {
+        return to_string(begin);
+      } 
+      return to_string(begin) + "->" + to_string(end);
     }
+public:
     vector<string> summaryRanges(vector<int>& nums) {
+      const int n = nums.size();
+
       vector<string> result;
-      if (nums.size() == 0) { 
+      
+      if (n == 0) {
+          return result;
+      }
+
+      if (n == 1) {
+        result.push_back(yieldRange(nums[0], nums[0]));
         return result;
       }
-      int start = nums[0];
-      for (int i = 1; i < nums.size(); ++i) {
-        if (nums[i] + 0L - nums[i - 1] > 1) {
-          result.push_back(getRange(start, nums[i - 1] - start + 1));
-          start = nums[i];
+
+      int last = nums[0];
+      int begin = last;
+      for (int i = 1; i < n; ++i) {
+        if (nums[i] - last != 1) {
+          result.push_back(yieldRange(begin, last));
+          begin = nums[i];
         }
+        last = nums[i];
       }
-      result.push_back(getRange(start, nums[nums.size() - 1] - start + 1));
+
+      result.push_back(yieldRange(begin, nums[n - 1]));
+
       return result;
     }
 };
