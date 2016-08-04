@@ -1,43 +1,43 @@
 class LRUCache{
 protected:
-    int m_capacity;
+    // key
     list<int> m_list;
+    // key, (it, value)
     unordered_map<int, pair<list<int>::iterator, int>> m_map;
-
-    void touch(unordered_map<int, pair<list<int>::iterator, int>>::iterator it) {
-        m_list.erase(it->second.first);
-        m_list.push_front(it->first);
-        it->second.first = m_list.begin();
-    }
+    int m_capacity;
 
 public:
-    LRUCache(int capacity) : m_capacity(capacity) {}
+    LRUCache(int capacity) { 
+        m_capacity = capacity; 
+    }
     
     int get(int key) {
-        auto it = m_map.find(key);
-
-        if (it == m_map.end()) {
+        if (m_map.count(key) == 0) {
             return -1;
         }
-
-        int val = it->second.second;
-        touch(it);
-        return val;
+        set(key, m_map[key].second);
+        return m_map[key].second;
     }
     
     void set(int key, int value) {
-        auto it = m_map.find(key);
 
-        if (it == m_map.end()) {
-            if (m_list.size() == m_capacity) {
+        if (m_map.count(key) == 0) { // if key is not in there
+            // Clean the outdated cache if necessary.
+            while (m_list.size() >= m_capacity) {
                 m_map.erase(m_list.back());
                 m_list.pop_back();
             }
-            m_list.push_front(key);
-            m_map[key] = make_pair(m_list.begin(), value);
         } else {
-            it->second.second = value;
-            touch(it);
+            // find the iterator in list. 
+            pair<list<int>::iterator, int> p = m_map[key];
+            list<int>::iterator it = p.first;
+            // erase this iterator from the list.
+            m_list.erase(it);
         }
+        
+        // push a new key to the back of the list.
+        m_list.push_front(key);
+        // update the iterator and the value in the hash map.
+        m_map[key] = make_pair(m_list.begin(), value);
     }
 };
