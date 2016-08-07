@@ -1,86 +1,62 @@
 class Solution {
 public:
-    string fractionToDecimal(int numerator, int denominator) {
+    string fractionToDecimal(long long numerator, long long denominator) {
+        bool isNegative = false;
+        if (numerator < 0 && denominator > 0 || numerator > 0 && denominator < 0) {
+            isNegative = true;
+        } 
 
-        unordered_map<int, int> M;
-        ostringstream oss;
+        numerator = abs(numerator);
+        denominator = abs(denominator);
+        
+        long long integerPart = numerator / denominator;
 
-        long long num = numerator;
-        long long den = denominator;
-
-        int negCount = 0;
-
-        if (num < 0) {
-            negCount++;
-            num = -num; 
-        }
-
-        if (den < 0) {
-            negCount++;
-            den = -den;
-        }
-
-        long long dec = num / den;
-        num %= den;
-
-        if (!(dec == 0 && num == 0)) {
-            if (negCount & 1) {
-                oss << "-";
+        long long remain = numerator % denominator;
+        if (remain == 0) {
+            if (isNegative) {
+                return "-" + to_string(integerPart);
+            } else {
+                return to_string(integerPart);
             }
         }
-
-        oss << dec;
-        
-        if (num == 0) {
-            return oss.str();
-        } 
-        
-        oss << ".";
 
         vector<int> digits;
-
-        num *= 10;
-
-        int repeatFrom = -1;
-
-        while (true) {
-            if (M.count(num) == 1) {
-                repeatFrom = M[num];
+        unordered_map<int, int> M;
+        int repeatStart = -1;
+        while (remain != 0) {
+            remain *= 10;
+            if (M.count(remain) == 1) {
+                repeatStart = M[remain];
                 break;
             }
-            M[num] = (int) digits.size();
-            
-            if (num < den) {
-                digits.push_back(0);
-                num *= 10;
-            } else {
-                long long mul = num / den; 
-                long long rem = num - mul * den;
-                digits.push_back(mul);
-
-                if (rem == 0) {
-                    break;
-                }
-                
-                num = rem * 10;
-            }
+            digits.push_back(remain / denominator);
+            M[remain] = digits.size() - 1;
+            remain %= denominator;
         }
 
-        if (repeatFrom != -1) {
-            for (int i = 0; i < repeatFrom; ++i) {
-                oss << digits[i];
+        string ans = to_string(integerPart) + ".";
+
+        if (repeatStart == -1) {
+            for (int digit : digits) {
+                ans += to_string(digit);
             }
-            oss << '(';
-            for (int i = repeatFrom; i < digits.size(); ++i) {
-                oss << digits[i];
-            }
-            oss << ')';
         } else {
-            for (int i = 0; i < digits.size(); ++i)  {
-                oss << digits[i];
+            for (int i = 0; i < repeatStart; ++i) {
+                ans += to_string(digits[i]);
             }
+            ans += "(";
+            for (int i = repeatStart; i < digits.size(); ++i) {
+                ans += to_string(digits[i]);
+            }
+            ans += ")";
         }
 
-        return oss.str();
+        if (isNegative) {
+            ans = "-" + ans;
+        } 
+        return ans; 
+    }
+    string fractionToDecimal(int numerator, int denominator) {
+        return fractionToDecimal((long long)numerator, (long long)denominator);
     }
 };
