@@ -1,48 +1,40 @@
 class Logger {
-
-protected:
-    unordered_map<string, int> m_map;
-    list<pair<int, string>> m_queue;
-
 public:
     /** Initialize your data structure here. */
     Logger() {
-        
     }
     
     /** Returns true if the message should be printed in the given timestamp, otherwise returns false.
         If this method returns false, the message will not be printed.
         The timestamp is in seconds granularity. */
     bool shouldPrintMessage(int timestamp, string message) {
-        bool ret = false;
-        if (m_map.count(message) == 0) {
-            m_map[message] = timestamp;
-            ret = true;
-        } else {
-            int lastTimestamp = m_map[message];
-            if (timestamp - lastTimestamp >= 10) {
-                m_map[message] = timestamp;
-                ret = true;
-            }
+        bool should_print_message = false;
+        int last_timestamp = INT_MIN;
+        if (message_timestamp_map_.find(message) != message_timestamp_map_.end()) {
+            last_timestamp = message_timestamp_map_[message];
+        }
+        if (last_timestamp == INT_MIN || timestamp - last_timestamp >= 10) {
+            message_timestamp_map_[message] = timestamp;
+            message_timestamp_queue_.push(make_pair(message, timestamp));
+            should_print_message = true;
         }
 
-        m_queue.push_back(make_pair(timestamp, message));
+        while (!message_timestamp_queue_.empty()) {
+            const auto& front_message_timestamp = message_timestamp_queue_.front();
+            const string& front_message = front_message_timestamp.first;
+            const int& front_timestamp = front_message_timestamp.second;
 
-        while (!m_queue.empty()) {
-            int ts =  m_queue.front().first;
-            string ms = m_queue.front().second;
-            if ((timestamp - ts) >= 10) {
-                if (m_map[message] == ts) {
-                    m_map.erase(ms);
-                }
-                m_queue.pop_front();
+            if (message_timestamp_map_[front_message] - front_timestamp >= 10) {
+                message_timestamp_queue_.pop();
             } else {
                 break;
             }
         }
-
-        return ret;
+        return should_print_message;
     }
+private:
+    unordered_map<string, int> message_timestamp_map_;
+    queue<pair<string, int> > message_timestamp_queue_;
 };
 
 /**
