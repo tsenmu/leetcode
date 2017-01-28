@@ -1,31 +1,29 @@
 class Solution {
-private:
-    unordered_map<int, int> m_reversedDigit;
-
-    void initializeReversedDigits() {
-        m_reversedDigit[0] = 0;
-        m_reversedDigit[1] = 1;
-        m_reversedDigit[2] = -1;
-        m_reversedDigit[3] = -1;
-        m_reversedDigit[4] = -1;
-        m_reversedDigit[5] = -1;
-        m_reversedDigit[6] = 9;
-        m_reversedDigit[7] = -1;
-        m_reversedDigit[8] = 8;
-        m_reversedDigit[9] = 6;
-    }
 public:
-    Solution() {
-        initializeReversedDigits();
-    }
-
     bool isStrobogrammatic(string num) {
-        const int len = (int) num.length();
-        string reversedNum = num;
-        for (int i = 0; i < len; ++i) {
-            int reversedDigit = m_reversedDigit[num[i] - '0'];
-            reversedNum[len - i - 1] = reversedDigit + '0';
+        const int num_len = num.length();
+        for (int i = 0; i < num_len; ++i) {
+            if (strobogrammatic_number_map_[CharToInt(num[i])] 
+                != CharToInt(num[num_len - i - 1])) {
+                return false;
+            }
         }
-        return reversedNum == num;
+        return true;
     }
+private: 
+    int CharToInt(char ch) {
+        return static_cast<int>(ch - '0');
+    }
+    unordered_map<int, int> strobogrammatic_number_map_ = {
+        {0, 0},
+        {1, 1},
+        {2, -1},
+        {3, -1},
+        {4, -1},
+        {5, -1},
+        {6, 9},
+        {7, -1},
+        {8, 8},
+        {9, 6}
+    };
 };
