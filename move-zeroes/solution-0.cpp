@@ -9,5 +9,9 @@ public:
           next_position++;
         }
       }
+
+      for (int i = next_position; i < size; ++i) {
+        nums[i] = 0;
+      }
     }
 };
