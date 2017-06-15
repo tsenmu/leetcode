@@ -1,18 +1,12 @@
 class Solution {
 public:
-    int removeElement(int A[], int n, int elem) {
-      int r = n - 1;
-      int l = 0;
-      while (l <= r) {
-        if (A[r] == elem) {
-          r--;
-        } else if (A[l] == elem) {
-          swap(A[l], A[r]);
-          l++;
-        } else {
-          l++;
+    int removeElement(vector<int>& nums, int val) {
+        int nextPos = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] != val) {
+              nums[nextPos++] = nums[i];
+            }
         }
-      }
-      return r + 1;
+        return nextPos;
     }
 };
